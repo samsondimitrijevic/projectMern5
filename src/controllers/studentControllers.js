@@ -1,45 +1,67 @@
-// Fake data
-let students = [
-  { id: 1, name: "John" },
-  { id: 2, name: "Samson" },
-  { id: 3, name: "Kimberley" },
-];
+const { Student } = require("../models/students");
+const {
+  getAllStudentsDB,
+  getStudentByIdDB,
+  getStudentByNameDB,
+  createStudentDB,
+  updateStudentDB,
+  deleteStudentDB,
+} = require("../repositories/studentFunctions");
+
+// http://localhost:3001//students GET
+const getAllStudents = async (req, res) => {
+  const students = await getAllStudentsDB({});
+  /*  const students = await Student.find({}); */
+  res.status(200).json({ data: students });
+};
 
 // http://localhost:3001//students/1 GET
-const getStudentById = (req, res) => {
+const getStudentById = async (req, res) => {
   const { id } = req.params;
+  const student = await getStudentByIdDB(id);
+  /*  const student = await Student.findById(id); */
 
-  const student = students.find((student) => {
+  /*   const student = students.find((student) => {
     return student.id.toString() === id;
-  });
+  }); */
 
   res.status(200).json({ data: student });
 };
 
-// http://localhost:3001//students GET
-const getAllStudents = (req, res) => {
-  res.status(200).json({ data: students });
-};
-
 // http://localhost:3001/filter?name=Samson GET
-const getStudentByName = (req, res) => {
+const getStudentByName = async (req, res) => {
   const { name } = req.query;
+  const student = await getStudentByNameDB(name);
+  res.status(200).json({ data: student });
 
-  if (name) {
+  /* const nameFilter = {
+    name: {
+      $regex: new RegExp(name, "i"),
+    },
+  }; */
+
+  /*   const student = await Student.find(name ? nameFilter : {});
+  res.status(200).json({ data: student }); */
+
+  /*   if (name) {
     const filteredStudent = students.filter((student) => {
       return student.name === name;
     });
     res.status(200).json({ data: filteredStudent });
   } else {
     res.status(200).json({ data: students });
-  }
+  } */
 };
 
 // http://localhost:3001//students POST
-const createStudent = (req, res) => {
-  console.log(req.body);
+const createStudent = async (req, res) => {
+  const newStudent = await createStudentDB({
+    name: req.body.name,
+  });
+  /* await newStudent.save(); */
+  res.status(200).json({ data: newStudent });
 
-  const newStudent = {
+  /*   const newStudent = {
     id: Date.now(),
     name: req.body.name,
   };
@@ -47,7 +69,7 @@ const createStudent = (req, res) => {
   students.push(newStudent);
   res.status(201).json({
     data: newStudent,
-  });
+  }); */
 
   /*   students.push({
     id: 4,
@@ -60,11 +82,17 @@ const createStudent = (req, res) => {
 };
 
 // http://localhost:3001/students/<id> PUT
-const updateStudent = (req, res) => {
+const updateStudent = async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  students = students.map((student) => {
+  const updatedStudent = await updateStudentDB(id, { name });
+  /*   id,
+    { name: name },
+    { new: true }
+  ); */
+
+  /*   students = students.map((student) => {
     if (student.id.toString() === id) {
       return {
         ...student,
@@ -73,21 +101,25 @@ const updateStudent = (req, res) => {
     } else {
       return student;
     }
-  });
+  }); */
 
-  const updatedStudent = students.find(
+  /*   const updatedStudent = students.find(
     (student) => student.id.toString() === id
-  );
+  ); */
   res.status(200).json({ data: updatedStudent });
 };
 
 // http://localhost:3001/students/<id> DELETE
-const deleteStudent = (req, res) => {
+const deleteStudent = async (req, res) => {
   const { id } = req.params;
 
-  students = students.filter((student) => {
+  deleteStudentDB(id);
+
+  /*   await Student.findByIdAndDelete(id); */
+
+  /*   students = students.filter((student) => {
     return student.id.toString() !== id;
-  });
+  }); */
   res.status(200).json({ data: `Student with id ${id} has been deleted` });
 };
 
