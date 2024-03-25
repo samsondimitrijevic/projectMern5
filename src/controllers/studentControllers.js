@@ -1,6 +1,3 @@
-const express = require("express");
-const router = express.Router();
-
 // Fake data
 let students = [
   { id: 1, name: "John" },
@@ -8,24 +5,24 @@ let students = [
   { id: 3, name: "Kimberley" },
 ];
 
-router.get("/", (req, res) => {
-  res.send("Welcome to Express!");
-});
+// http://localhost:3001//students/1 GET
+const getStudentById = (req, res) => {
+  const { id } = req.params;
 
-// http://localhost:3001/upper?name=Samson
-router.get("/upper", (req, res) => {
-  try {
-    const name = req.query.name;
-    console.log(name);
+  const student = students.find((student) => {
+    return student.id.toString() === id;
+  });
 
-    const upperName = name.toUpperCase();
-    res.status(200).json({ data: `Hello ${upperName}` });
-  } catch (err) {
-    res.status(500).json({ error: "Query parameter 'name' is mandatory" });
-  }
-});
+  res.status(200).json({ data: student });
+};
+
+// http://localhost:3001//students GET
+const getAllStudents = (req, res) => {
+  res.status(200).json({ data: students });
+};
+
 // http://localhost:3001/filter?name=Samson GET
-router.get("/filter", (req, res) => {
+const getStudentByName = (req, res) => {
   const { name } = req.query;
 
   if (name) {
@@ -36,29 +33,10 @@ router.get("/filter", (req, res) => {
   } else {
     res.status(200).json({ data: students });
   }
-});
-
-// http://localhost:3001/students/<name> GET
-// http://localhost:3001/students/Nick
-// using URL params
-
-router.get("/students", (req, res) => {
-  res.status(200).json({ data: students });
-});
-
-// http://localhost:3001//students/1 GET
-router.get("/students/:id", (req, res) => {
-  const { id } = req.params;
-
-  const student = students.find((student) => {
-    return student.id.toString() === id;
-  });
-
-  res.status(200).json({ data: student });
-});
+};
 
 // http://localhost:3001//students POST
-router.post("/students", (req, res) => {
+const createStudent = (req, res) => {
   console.log(req.body);
 
   const newStudent = {
@@ -79,11 +57,10 @@ router.post("/students", (req, res) => {
     id: 4,
     name: "Lauren",
   }); */
-});
+};
 
 // http://localhost:3001/students/<id> PUT
-
-router.put("/students/:id", (req, res) => {
+const updateStudent = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -102,16 +79,23 @@ router.put("/students/:id", (req, res) => {
     (student) => student.id.toString() === id
   );
   res.status(200).json({ data: updatedStudent });
-});
+};
 
 // http://localhost:3001/students/<id> DELETE
-router.delete("/students/:id", (req, res) => {
+const deleteStudent = (req, res) => {
   const { id } = req.params;
 
   students = students.filter((student) => {
     return student.id.toString() !== id;
   });
   res.status(200).json({ data: `Student with id ${id} has been deleted` });
-});
+};
 
-module.exports = router;
+module.exports = {
+  getAllStudents,
+  getStudentByName,
+  getStudentById,
+  createStudent,
+  updateStudent,
+  deleteStudent,
+};
