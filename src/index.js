@@ -4,6 +4,7 @@ require("./config/db");
 const baseRouter = require("./routes/baseRoutes");
 const studentRouter = require("./routes/studentRoutes");
 const utilityRouter = require("./routes/utilityRoutes");
+const authRouter = require("./routes/auth");
 
 const { clearAndInsertData } = require("./models/student-data");
 
@@ -14,6 +15,7 @@ clearAndInsertData();
 
 app.use("/students", studentRouter);
 app.use("/utilities", utilityRouter);
+app.use("/auth", authRouter);
 app.use("/", baseRouter);
 
 const PORT = 3001;
