@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 const SECRET_TOKEN = "MyUltraSecret-Key";
+const tokenTimeout = "1hr";
 
 const signToken = (payload) => {
-  const token = jwt.sign(payload, SECRET_TOKEN);
+  const token = jwt.sign(payload, SECRET_TOKEN, { expiresIn: tokenTimeout });
   return token;
 };
 
