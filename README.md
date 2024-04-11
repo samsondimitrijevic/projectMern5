@@ -45,7 +45,7 @@ The project features in "Thunder Client" a collection of 8 folders:
 
 ## Plugin
 
-| GitHub |
+| GitHub | https://github.com/samsondimitrijevic/projectMern5.git
 
 ## Contact
 
